@@ -4,21 +4,18 @@
   </div>
 </div>
 
-<div class="row" *ngFor="let block of plan.blocks">
-  <div class="col-sm-12">
-    <div class="card mb-3" >
-      <div class="card-header">{{block.title}}</div>
-      <div class="card-block">
-        <div class="row">
-          <div class="col-sm-12">
-            <ul class="list-group">
-              <li class="list-group-item" *ngFor="let step of block.steps">
-                {{step.title}}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="content-section implementation">
+<p-dataTable [value]="plan.steps" sortField="sort" rowGroupMode="subheader" groupField="block" expandableRowGroups="true" [sortableRowGroup]="false">
+
+  <ng-template pTemplate="rowgroupheader" let-rowData>{{rowData['block']}}</ng-template>
+  <p-column field="id" header="ID">
+    <ng-template let-col let-step="rowData" pTemplate="body">
+        <span>{{step.block}}-{{step.sort}}</span>
+    </ng-template>
+</p-column>
+  <p-column field="title" header="Step"></p-column>
+  <p-column field="assignee.group" header="Group"></p-column>
+  <p-column field="assignee.name" header="Name"></p-column>
+
+</p-dataTable>
 </div>
