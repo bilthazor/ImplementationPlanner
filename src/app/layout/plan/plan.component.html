@@ -5,17 +5,70 @@
 </div>
 
 <div class="content-section implementation">
-<p-dataTable [value]="plan.steps" sortField="sort" rowGroupMode="subheader" groupField="block" expandableRowGroups="true" [sortableRowGroup]="false">
+<p-dataTable
+    selectionMode="single"
+    [(selection)]="selectedStep"
+    [value]="plan.steps"
+    sortField="sort"
+    rowGroupMode="subheader"
+    groupField="block"
+    expandableRowGroups="true"
+    (onRowSelect)="onRowSelect($event)"
+    [sortableRowGroup]="false">
 
+  <p-headerColumnGroup>
+    <p-row>
+    <p-column header="ID" rowspan="2"></p-column>
+    <p-column header="Step" rowspan="2"></p-column>
+    <p-column header="Time" rowspan="2"></p-column>
+    <p-column header="Duration" rowspan="2"></p-column>
+    <p-column header="Assignee" colspan="2"></p-column>
+    <p-column header="Remarks" rowspan="2"></p-column>
+    <p-column header="Needed For" colspan="2"></p-column>
+    </p-row>
+    <p-row>
+        <p-column header="Group"></p-column>
+        <p-column header="Name"></p-column>
+        <p-column header="Team"></p-column>
+        <p-column header="Application"></p-column>
+    </p-row>
+  </p-headerColumnGroup>
+ 
   <ng-template pTemplate="rowgroupheader" let-rowData>{{rowData['block']}}</ng-template>
-  <p-column field="id" header="ID">
+  <p-column field="id">
     <ng-template let-col let-step="rowData" pTemplate="body">
         <span>{{step.block}}-{{step.sort}}</span>
     </ng-template>
 </p-column>
-  <p-column field="title" header="Step"></p-column>
-  <p-column field="assignee.group" header="Group"></p-column>
-  <p-column field="assignee.name" header="Name"></p-column>
+  <p-column field="title"></p-column>
+  <p-column field="time"></p-column>
+  <p-column field="duration"></p-column>
+  <p-column field="assignee.group"></p-column>
+  <p-column field="assignee.name"></p-column>
+  <p-column field="remarks"></p-column>
+  <p-column field="neededForTeam"></p-column>
+  <p-column field="neededForApplication"></p-column>
 
 </p-dataTable>
+
+<p-dialog header="Step Details" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedStep">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label for="block">Block</label></div>
+            <div class="ui-grid-col-8"><input pInputText id="block" [(ngModel)]="selectedStep.block" /></div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label for="title">Title</label></div>
+            <div class="ui-grid-col-8"><input pInputText id="tile" [(ngModel)]="selectedStep.title" /></div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa-close" (click)="cancel()" label="Cancel"></button>
+            <button type="button" pButton icon="fa-check" (click)="save()" label="Save"></button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+
 </div>

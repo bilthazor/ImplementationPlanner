@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Step } from './Step';
 
 @Component({
   selector: 'app-plan',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./plan.component.scss']
 })
 export class PlanComponent implements OnInit {
+
+selectedStep: Step;
 
   plan = {
     title : 'R7',
@@ -19,7 +22,8 @@ export class PlanComponent implements OnInit {
       assignee: {
         group: 'DEV',
         name: 'Developer 1'
-      }
+      },
+      duration: '0:10'
     },
     {
       block: 'TUE',
@@ -44,9 +48,34 @@ export class PlanComponent implements OnInit {
   ]
 }
 
+  displayDialog = false;
+
   constructor() { }
 
   ngOnInit() {
   }
+
+  save(): void {
+
+  }
+
+  cancel(): void {
+    this.displayDialog = false;
+    this.selectedStep = null;
+  }
+
+  onRowSelect(event): void {
+    this.selectedStep = this.cloneStep(event.data);
+    this.displayDialog = true;
+  }
+
+  cloneStep(s: Step): Step {
+    let step = new Step();
+
+    for(let prop in s) {
+          step[prop] = s[prop];
+      }
+      return step;
+    }
 
 }

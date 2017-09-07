@@ -3,14 +3,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlanComponent } from './plan.component';
 import { PlanRoutingModule } from './plan-routing.module';
-import { DataTableModule } from 'primeng/primeng';
+import { DataTableModule, DialogModule, ButtonModule, InputTextModule } from 'primeng/primeng';
 
 @NgModule({
   imports: [
     CommonModule,
     PlanRoutingModule,
     PageHeaderModule,
-    DataTableModule
+    DataTableModule,
+    DialogModule,
+    ButtonModule,
+    InputTextModule
   ],
   declarations: [PlanComponent]
 })
