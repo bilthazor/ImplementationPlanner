@@ -9,22 +9,19 @@
     selectionMode="single"
     [(selection)]="selectedStep"
     [value]="plan.steps"
-    sortField="sort"
     rowGroupMode="subheader"
     groupField="block"
-    expandableRowGroups="true"
-    (onRowSelect)="onRowSelect($event)"
-    [sortableRowGroup]="false">
+    (onRowSelect)="onRowSelect($event)">
 
   <p-headerColumnGroup>
     <p-row>
-    <p-column header="ID" rowspan="2"></p-column>
-    <p-column header="Step" rowspan="2"></p-column>
-    <p-column header="Time" rowspan="2"></p-column>
-    <p-column header="Duration" rowspan="2"></p-column>
-    <p-column header="Assignee" colspan="2"></p-column>
-    <p-column header="Remarks" rowspan="2"></p-column>
-    <p-column header="Needed For" colspan="2"></p-column>
+        <p-column header="ID" rowspan="2"></p-column>
+        <p-column header="Step" rowspan="2"></p-column>
+        <p-column header="Time" rowspan="2"></p-column>
+        <p-column header="Duration" rowspan="2"></p-column>
+        <p-column header="Assignee" colspan="2"></p-column>
+        <p-column header="Remarks" rowspan="2"></p-column>
+        <p-column header="Needed For" colspan="2"></p-column>
     </p-row>
     <p-row>
         <p-column header="Group"></p-column>
@@ -37,7 +34,7 @@
   <ng-template pTemplate="rowgroupheader" let-rowData>{{rowData['block']}}</ng-template>
   <p-column field="id">
     <ng-template let-col let-step="rowData" pTemplate="body">
-        <span>{{step.block}}-{{step.sort}}</span>
+        <span>{{step.block}}-{{step.order}}</span>
     </ng-template>
 </p-column>
   <p-column field="title"></p-column>
@@ -48,23 +45,29 @@
   <p-column field="remarks"></p-column>
   <p-column field="neededForTeam"></p-column>
   <p-column field="neededForApplication"></p-column>
-
+  <p-footer><div class="ui-helper-clearfix" style="width:100%"><button type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAdd()" label="Add"></button></div></p-footer>
+  
 </p-dataTable>
 
 <p-dialog header="Step Details" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true">
-    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedStep">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="step">
         <div class="ui-grid-row">
             <div class="ui-grid-col-4"><label for="block">Block</label></div>
-            <div class="ui-grid-col-8"><input pInputText id="block" [(ngModel)]="selectedStep.block" /></div>
+            <div class="ui-grid-col-8"><p-dropdown [options]="blocks" [(ngModel)]="step.block" placeholder="..."></p-dropdown></div>
         </div>
         <div class="ui-grid-row">
             <div class="ui-grid-col-4"><label for="title">Title</label></div>
-            <div class="ui-grid-col-8"><input pInputText id="tile" [(ngModel)]="selectedStep.title" /></div>
+            <div class="ui-grid-col-8"><input pInputText id="title" [(ngModel)]="step.title" /></div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label for="title">Order</label></div>
+            <p-spinner [(ngModel)]="step.order" [min]="1"></p-spinner>
         </div>
     </div>
     <p-footer>
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
             <button type="button" pButton icon="fa-close" (click)="cancel()" label="Cancel"></button>
+            <button type="button" pButton icon="fa-close" (click)="delete()" label="delete"></button>
             <button type="button" pButton icon="fa-check" (click)="save()" label="Save"></button>
         </div>
     </p-footer>

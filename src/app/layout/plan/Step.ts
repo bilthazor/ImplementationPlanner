@@ -6,4 +6,5 @@ export class Step {
     public assignee:   {};
     public remarks:    string;
     public neededFor:  {};
+    public order:       number;
 }

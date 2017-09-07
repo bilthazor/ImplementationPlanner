@@ -1,3 +1,4 @@
+import { PlanService } from './plan.service';
 import { Component, OnInit } from '@angular/core';
 import { Step } from './Step';
 
@@ -8,55 +9,39 @@ import { Step } from './Step';
 })
 export class PlanComponent implements OnInit {
 
-selectedStep: Step;
+  step: Step = new Step();
+  selectedStep: Step;
+  newStep: boolean;
+  displayDialog: boolean;
 
-  plan = {
-    title : 'R7',
-    date : '2017/10/02',
-  steps : [
-    {
-      block: 'PRE',
-      sort: '1',
-      state: 'OPEN',
-      title: 'Step 1',
-      assignee: {
-        group: 'DEV',
-        name: 'Developer 1'
-      },
-      duration: '0:10'
-    },
-    {
-      block: 'TUE',
-      sort: '2',
-      state: 'OPEN',
-      title: 'Step 2',
-      assignee: {
-        group: 'OPER',
-        name: 'Operator 1'
-      }
-    },
-    {
-      block: 'FRI',
-      sort: '3',
-      state: 'OPEN',
-      title: 'Step 3',
-      assignee: {
-        group: 'IAS',
-        name: 'IAS 1'
-      }
-    }
-  ]
-}
+  plan: any;
+  blocks: any[];
 
-  displayDialog = false;
-
-  constructor() { }
+  constructor(private planService: PlanService) { }
 
   ngOnInit() {
+    this.plan = this.planService.getPlan();
+    this.plan.steps = this.planService.sortSteps(this.plan.steps);
+    this.blocks = this.planService.blocks.map(function(item) { return { label: item, value: item}; });
   }
 
-  save(): void {
+  showDialogToAdd() {
+    this.newStep = true;
+    this.step = new Step();
+    this.displayDialog = true;
+}
 
+  save(): void {
+    let steps = [...this.plan.steps];
+    if (this.newStep) {
+        steps.push(this.step);
+    } else {
+        steps[this.findSelectedStepIndex()] = this.step;
+    }
+
+    this.plan.steps = this.planService.sortSteps(steps);
+    this.step = null;
+    this.displayDialog = false;
   }
 
   cancel(): void {
@@ -64,18 +49,30 @@ selectedStep: Step;
     this.selectedStep = null;
   }
 
+  delete() {
+    const index = this.findSelectedStepIndex();
+    this.plan.steps = this.plan.steps.filter((val, i) => i !== index);
+    this.step = null;
+    this.displayDialog = false;
+  }
+
   onRowSelect(event): void {
-    this.selectedStep = this.cloneStep(event.data);
+    this.newStep = false;
+    this.step = this.cloneStep(event.data);
     this.displayDialog = true;
   }
 
   cloneStep(s: Step): Step {
-    let step = new Step();
+    const step = new Step();
 
     for(let prop in s) {
           step[prop] = s[prop];
       }
       return step;
     }
+
+    findSelectedStepIndex(): number {
+      return this.plan.steps.indexOf(this.selectedStep);
+  }
 
 }
